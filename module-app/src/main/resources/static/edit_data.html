@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="Злата">
+    <meta name="description" content="Сайт о моей кошке Бетти">
+    <meta name="keywords" content="кошка,уход,описание,Бетти">
+    <link rel="stylesheet" href="Resources/css/main.css">
+    <script type="text/javascript" src="./resources/js/main.js" >
+
+    </script>
+  </head>
+
+<body class="page-with-bg" onload="CATS.drowTable()">
+
+  <div class="img-cat">
+    <img src="Resources/img/head.jpg" width="100%" height="auto" alt="бетта">
+  </div>
+
+  <div class="base-body-cont">
+
+    <div class="left-aside">
+      <ul >
+        <li><a href="index.html">Главная страница</a></li>
+        <li><a href="about_cat.html">Моя Бетта</a></li>
+        <li><a href="about.html">Обо мне</a></li>
+        <li><a href="edit_data.html">Внесите данные кошки</a></li>
+
+      </ul>
+    </div>
+  <div class="base-body">
+    <div class="base-body-form">
+      <center>
+      <h2>Дневник вашей кошки</h2>
+    </center>
+      <form action="" method="post" >
+        <label for="user_name">Выберите имя</label>
+        <select name="Кошка:" id="catName">
+         <option value="Муся">Муся</option>
+         <option value="Бетти">Бэтти</option>
+         <option value="Мурзик">Мурзик</option>
+       </select><br>
+
+        <label for="weith_cat">Введите дату и время</label>
+        <input type="datetime-local" id="timestamp" ><br>
+
+        <label for="weith_cat">Введите вес кошки(кг)</label>
+        <input type="number" name="weith_cat" id="weith_cat"><br>
+
+        <label for="eatName">Выберите корм</label>
+        <select name="eatName:" id="eatName">
+          <option value="Felix">Felix</option>
+          <option value="Perfect">Perfect</option>
+          <option value="Kitekat">Kitekat</option>
+        </select><br>
+
+       <label for="weith_eat">Введите вес корма(г)</label>
+       <input type="number" name="weith_eat" id="weith_eat"><br>
+
+       <label for="happy_unhappy">Оцените настроение кошки</label>
+       <select name="happy_unhappy" id="happy_unhappy">
+         <option value="1">1</option>
+         <option value="2">2</option>
+         <option value="3">3</option>
+         <option value="4">4</option>
+         <option value="5">5</option>
+       </select><br>
+
+       <input type="button" value = "Добавить в таблицу" onClick="CATS.addData()" class="button-add">
+      <!-- <input type="submit" value ="отправить"><br><br> перезагрузка страницы  -->
+
+    </form>
+  </div>
+
+    <div class="base-body-table">
+      <input type="reset" value ="Очистить" onclick="CATS.clearData()" class="clear-button"><!-- очищает форму  -->
+      <table border="2" width="1000px"> <!-- border="1"-обводка 1 пискель -->
+        <!-- шапка  -->
+        <thead>
+          <tr><!--ряд  -->
+            <th>Имя Кошки</th>
+            <th>Дата-Время</th>
+            <th>Вес кошки(кг) </th>
+            <th>Тип корма</th>
+            <th>Вес корма(г)</th>
+            <th>Настроение за день(0-5)</th>
+          </tr>
+        </thead>
+
+        <tbody  align="center" id = "catTableBodyId">
+          <tr>
+            <td>Jon</td><!-- td - чтобы не был жирным -->
+            <td>19.04.2026 15:36</td>
+            <td>5 кг</td>
+            <td>Perfect</td>
+            <td>100 грам</td>
+            <td>4</td>
+
+          </tr>
+          <tr>
+            <td>Jon 2</td>
+            <td>Dale</td>
+
+          </tr>
+          <tr>
+            <td>Jon 3</td>
+            <td>Dale</td>
+
+          </tr>
+          <tr>
+            <td>Jon 4</td>
+            <td>Dale</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  </div>
+
+  </body>
+</html>

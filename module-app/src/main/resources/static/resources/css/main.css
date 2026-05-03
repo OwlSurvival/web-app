@@ -1,0 +1,65 @@
+/*body.page-with-bg {
+    background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), url('beta1.jpg');
+    /* background-image: url('beta1.jpg'); /* Путь к картинке
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    opacity: 0.5;
+}
+*/
+body {
+  background-color:#FFEBCD
+}
+.left-aside {
+  text-align: left;
+  border: 1px rgb(128, 128, 128) solid;
+  padding: 10px 20px 15px 10px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.base-body{
+  margin-left:10px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.my-foto, .my-info{
+  display: inline-block;
+  vertical-align: top;
+}
+.my-info {
+  margin-left:30px;
+}
+.my-info a {
+  text-decoration: none;
+}
+.text img{
+  margin-right:40px;
+}
+.text h2{
+  text-align: center;
+  text-shadow: 5px 3px 5px rgb(150,150,150);
+}
+.base-body h2{
+  text-shadow: 5px 3px 5px rgb(150,150,150);
+}
+.base-body-form {
+  margin-top: 40px;
+  margin-bottom:40px;
+}
+.clear-button{
+  margin-bottom:10px;
+  padding: 15px;
+  width: 200px;
+  margin-left:800px;
+  background-color:#f092a2;
+
+}
+.button-add{
+  margin-top:10px;
+  padding: 15px;
+  background-color:#a7e8c9;
+  width: 200px;
+}

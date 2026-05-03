@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>zlata.web.app.models</artifactId>
+
+    <parent>
+        <artifactId>zlata.webapp.pom</artifactId>
+        <groupId>ru.vsu.zlata</groupId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <profiles>
+        <profile>
+            <id>jooq-generation</id>
+            <properties>
+                <skip.jooq.generation>false</skip.jooq.generation>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- jooq plugin to work with h2 database, to generate java sources
+              during run with profile: jooq-codegen-->
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>3.20.11</version>
+
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.h2database</groupId>
+                            <artifactId>h2</artifactId>
+                            <version>${h2database.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>jooq-codegen</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                         <!-- to skip this plugin work by default-->
+                        <skip>${skip.jooq.generation}</skip>
+                        <jdbc>
+                            <driver>org.h2.Driver</driver>
+                            <url>jdbc:h2:file:../module-app/database/mydatabase1</url>
+                            <user>sa</user>
+                            <password>1</password>
+                       </jdbc>
+                        <generator>
+                            <target>
+                                <packageName>ru.vsu.zlata.webapp.database.generated.jooq.models</packageName>
+                                <directory>src/main/java/</directory>
+                            </target>
+                            <database>
+                                <!--what dialect to use  -->
+                                <name>org.jooq.meta.h2.H2Database</name>
+                                <!-- what tables be included:  -->
+                                <includes>.*</includes>
+                                <!-- what tables be ignored:  -->
+                                <excludes>
+                                    uuid_.*
+                                    |FLYWAY_.*
+                                </excludes>
+                                <!--with schema should be selected to search tables:  -->
+                                <inputSchema>PUBLIC</inputSchema>
+                            </database>
+                            <generate>
+                                <newline>\r\n</newline>
+                                <daos>true</daos>
+                                <pojos>true</pojos>
+                                <pojosEqualsAndHashCode>true</pojosEqualsAndHashCode>
+                            </generate>
+                        </generator>
+                    </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

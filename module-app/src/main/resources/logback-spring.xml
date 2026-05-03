@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+   <!-- include some spring default resources: -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!-- override some default properties: -->
+    <property name="CONSOLE_LOG_PATTERN" value="%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %level %class{36}:%L - %msg%n"/>
+    <!-- default console appender: -->
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+     <!-- override some default properties: -->
+
+
+   <!-- change log level for a next web spring package only:  -->
+   <logger name="org.springframework.web" level="DEBUG"/>
+
+   <!--create new file appender with rotation for our web app only: -->
+    <appender name="APP_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %level %class{36}:%L - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <file>./logs/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>application.%d{yyyy-MM-dd}.%i.gz}</fileNamePattern>
+            <cleanHistoryOnStart>false</cleanHistoryOnStart>
+            <maxFileSize>3MB</maxFileSize>
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- set log level and appenders for webapp, exclude message propagation to root logger hierarchy: -->
+   <logger name="ru.vsu.zlata" level="TRACE" additivity="false">
+        <appender-ref ref="APP_APPENDER" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <!-- logger name="org.thymeleaf" level="INFO" additivity="false">
+        <appender-ref ref="APP_APPENDER" />
+       <appender-ref ref="CONSOLE" />
+    </logger-->
+
+
+    <!-- add default appenders to logger hierarchy: -->
+    <root level="INFO">
+        <appender-ref ref="APP_APPENDER" />
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+</configuration>

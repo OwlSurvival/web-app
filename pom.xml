@@ -1,0 +1,126 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.vsu.zlata</groupId>
+    <artifactId>zlata.webapp.pom</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+
+    <properties>
+
+        <revision>1.0.0</revision>
+
+        <project.build.sourceLevel>19</project.build.sourceLevel>
+        <project.build.targetLevel>19</project.build.targetLevel>
+        <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
+        <!-- https://docs.spring.io/spring-boot/ -->
+        <spring.version>4.0.6</spring.version>
+        <!-- https://logback.qos.ch/documentation.html -->
+        <logback.version>1.5.32</logback.version>
+        <!--https://www.h2database.com/html/main.html-->
+        <h2database.version>2.4.240</h2database.version>
+        <!-- https://www.jooq.org/doc/latest/manual/ -->
+        <jooq.version>3.20.3</jooq.version>
+        <skip.jooq.generation>true</skip.jooq.generation>
+
+        <!--junit.version>4.13.2</junit.version>
+        <junit.jupiter.version>5.9.1</junit.jupiter.version>
+        <junit.platform.version>1.9.1</junit.platform.version-->
+
+   </properties>
+
+    <modules>
+        <module>module-models</module>
+         <module>module-web</module>
+        <module>module-app</module>
+    </modules>
+
+	<repositories>
+	    <repository>
+	      <snapshots>
+	        <enabled>false</enabled>
+	      </snapshots>
+	      <id>central</id>
+	      <name>Central Maven Repository</name>
+	      <url>https://repo.maven.apache.org/maven2</url>
+	    </repository>
+	</repositories>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2database.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>${jooq.version}</version>
+            </dependency>
+         </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>${project.build.sourceLevel}</source>
+                    <target>${project.build.targetLevel}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
