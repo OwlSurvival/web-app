@@ -33,23 +33,27 @@ window.CATS = {
     CATS.drowTable();
 
  },
+
+ drowTableWithArrayData: function (arrayData){
+     const tbody = document.getElementById('catTableBodyId');
+     tbody.innerHTML = '';
+
+     for (var i = 0; i < arrayData.length; i++) {
+      console.log(arrayData[i]);
+       var newRow = document.createElement('tr');
+      newRow.innerHTML = '<td>'+arrayData[i].name+'</td><td>'+arrayData[i].datetime+
+      '</td><td>'+arrayData[i].weight+' кг</td><td>'+arrayData[i].eatName+
+      '</td><td>'+arrayData[i].eatWeight+'г</td><td>'+arrayData[i].happiness+
+      '</td>';
+      tbody.appendChild(newRow);
+      }
+   },
+
  drowTable: function (){
-   const tbody = document.getElementById('catTableBodyId');
-   tbody.innerHTML = '';
-
    var arrayData = JSON.parse(localStorage.getItem("arrayKey"));
-   for (var i = 0; i < arrayData.length; i++) {
-    console.log(arrayData[i]);
-
-    var newRow = document.createElement('tr');
-    newRow.innerHTML = '<td>'+arrayData[i].name+'</td><td>'+arrayData[i].datetime+
-    '</td><td>'+arrayData[i].weight+' кг</td><td>'+arrayData[i].eatName+
-    '</td><td>'+arrayData[i].eatWeight+'г</td><td>'+arrayData[i].happiness+
-    '</td>';
-    tbody.appendChild(newRow);
-
-   }
+   CATS.drowTableWithArrayData(arrayData);
  },
+
  clearData: function (){
     localStorage.setItem("arrayKey","[]");
     CATS.drowTable();
@@ -74,23 +78,30 @@ window.CATS = {
       }
 
  },
+
  getDataFromBase: async function(){
+     var datetime = document.getElementById("timestamp").value;
+     if(!datetime){
+      alert("Выбирите дату:");
+      return;
+     }
       try {
-              var response = await fetch('/cats/insert-cat-records', {
+              var response = await fetch('/cats/records?date='+datetime, {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'}
               });
               if (response.ok) {
-                const data = await response.json;
+                const data = await response.json();
                 console.log("response:"+data);
-               // CATS.clearData();
+                 CATS.clearData();
+                CATS.drowTableWithArrayData(data);
+
               } else {
                 throw new Error('Request failed with status ${response.status}');
               }
       } catch (error) {
           console.error(error.message);
       }
+  }
 
  }
-
-}
