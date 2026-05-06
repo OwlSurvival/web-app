@@ -3,20 +3,20 @@ window.CATS = {
  addData: function () {
 
    var catName = document.getElementById('catName').value;
-   var timstamp = document.getElementById("timestamp").value;
-   var catWeidth = document.getElementById("weith_cat").value;
+   var datetime = document.getElementById("timestamp").value;
+   var weight = document.getElementById("weith_cat").value;
    var eatName = document.getElementById("eatName").value;
-   var weith_eat = document.getElementById("weith_eat").value;
-   var happy_unhappy = document.getElementById("happy_unhappy").value;
+   var eatWeight = document.getElementById("weith_eat").value;
+   var happy = document.getElementById("happy_unhappy").value;
 
    var result= {
      "id":crypto.randomUUID(),
      "name": catName,
-     "time": timstamp,
-     "catWeidth": catWeidth,
+     "datetime": datetime,
+     "weight": weight,
      "eatName": eatName,
-     "weith_eat": weith_eat,
-     "happy_unhappy": happy_unhappy
+     "eatWeight": eatWeight,
+     "happiness": happy
    }
    var arrayData = localStorage.getItem("arrayKey");
    if (!arrayData){
@@ -42,17 +42,55 @@ window.CATS = {
     console.log(arrayData[i]);
 
     var newRow = document.createElement('tr');
-    newRow.innerHTML = '<td>'+arrayData[i].name+'</td><td>'+arrayData[i].time+
-    '</td><td>'+arrayData[i].catWeidth+' кг</td><td>'+arrayData[i].eatName+
-    '</td><td>'+arrayData[i].weith_eat+'г</td><td>'+arrayData[i].happy_unhappy+
+    newRow.innerHTML = '<td>'+arrayData[i].name+'</td><td>'+arrayData[i].datetime+
+    '</td><td>'+arrayData[i].weight+' кг</td><td>'+arrayData[i].eatName+
+    '</td><td>'+arrayData[i].eatWeight+'г</td><td>'+arrayData[i].happiness+
     '</td>';
     tbody.appendChild(newRow);
 
    }
  },
-clearData: function (){
-  localStorage.setItem("arrayKey","[]");
-  CATS.drowTable();
-}
+ clearData: function (){
+    localStorage.setItem("arrayKey","[]");
+    CATS.drowTable();
+ },
+
+ storeToDataBase: async function(){
+      try {
+              var response = await fetch('/cats/insert-cat-records', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: localStorage.getItem("arrayKey")
+              });
+              if (response.ok) {
+                const data = await response.json;
+                console.log("response:"+data);
+               // CATS.clearData();
+              } else {
+                throw new Error('Request failed with status ${response.status}');
+              }
+      } catch (error) {
+          console.error(error.message);
+      }
+
+ },
+ getDataFromBase: async function(){
+      try {
+              var response = await fetch('/cats/insert-cat-records', {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+              });
+              if (response.ok) {
+                const data = await response.json;
+                console.log("response:"+data);
+               // CATS.clearData();
+              } else {
+                throw new Error('Request failed with status ${response.status}');
+              }
+      } catch (error) {
+          console.error(error.message);
+      }
+
+ }
 
 }

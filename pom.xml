@@ -11,8 +11,8 @@
 
         <revision>1.0.0</revision>
 
-        <project.build.sourceLevel>19</project.build.sourceLevel>
-        <project.build.targetLevel>19</project.build.targetLevel>
+        <project.build.sourceLevel>21</project.build.sourceLevel>
+        <project.build.targetLevel>21</project.build.targetLevel>
         <maven-compiler-plugin.version>3.12.1</maven-compiler-plugin.version>
         <!-- https://docs.spring.io/spring-boot/ -->
         <spring.version>4.0.6</spring.version>
@@ -21,12 +21,7 @@
         <!--https://www.h2database.com/html/main.html-->
         <h2database.version>2.4.240</h2database.version>
         <!-- https://www.jooq.org/doc/latest/manual/ -->
-        <jooq.version>3.20.3</jooq.version>
-        <skip.jooq.generation>true</skip.jooq.generation>
-
-        <!--junit.version>4.13.2</junit.version>
-        <junit.jupiter.version>5.9.1</junit.jupiter.version>
-        <junit.platform.version>1.9.1</junit.platform.version-->
+        <lombok.version>1.18.30</lombok.version>
 
    </properties>
 
@@ -72,6 +67,12 @@
                 <artifactId>jooq</artifactId>
                 <version>${jooq.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>compile</scope>
+            </dependency>
          </dependencies>
     </dependencyManagement>
 
@@ -94,6 +95,15 @@
                     <source>${project.build.sourceLevel}</source>
                     <target>${project.build.targetLevel}</target>
                     <encoding>UTF-8</encoding>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version> <!-- Match your Lombok version -->
+                        </path>
+                    </annotationProcessorPaths>
+                    <debug>true</debug>
+                    <debuglevel>lines,vars,source</debuglevel>
                 </configuration>
             </plugin>
             <plugin>
