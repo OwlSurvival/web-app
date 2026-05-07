@@ -93,15 +93,81 @@ window.CATS = {
               if (response.ok) {
                 const data = await response.json();
                 console.log("response:"+data);
-                 CATS.clearData();
+                CATS.clearData();
                 CATS.drowTableWithArrayData(data);
-
               } else {
                 throw new Error('Request failed with status ${response.status}');
               }
       } catch (error) {
           console.error(error.message);
       }
+  },
+
+ initChart: function(){
+  if(window.chart)
+   return;
+   //https://www.chartjs.org/docs/4.5.1/getting-started/
+   const ctx = document.getElementById('myChart').getContext('2d');
+         window.chart = new Chart(ctx, {
+             type: 'line',
+             data: {
+                 labels: [],
+                 datasets: [
+                 {
+                     label: 'Динамика показателей1',
+                     data: [],
+                     borderColor: 'rgb(75, 192, 192)', // Цвет линии 1
+                     backgroundColor: 'rgba(75, 192, 192, 0.2)', // Цвет заливки
+                     tension: 0.1 // Сглаживание линии
+                 }, {
+                     label: 'Динамика показателей2',
+                     data: [],
+                     borderColor: 'rgb(255, 99, 132)', // Цвет линии 2
+                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                     tension: 0.1
+                   }
+                 ]
+             }
+         });
+  },
+
+  getDataAndDrawChart: async function(){
+
+    CATS.initChart();
+    const selectedDate = document.getElementById('timestamp').value;
+    if (!selectedDate)
+      return alert("Выберите дату");
+
+    try {
+
+       const response = await fetch('/cats/chart-data');
+        // Ожидаем массив объектов [{label: '...', value: 10}, ...]
+        let result = await response.json();
+/*
+        result=[
+           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
+           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
+           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
+           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
+           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
+           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
+           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
+        ];
+        */
+        window.chart.data.labels = result.map(item => item.label);
+        window.chart.data.datasets[0].data = result.map(item => item.value);
+        window.chart.data.datasets[1].data = result.map(item => item.value2);
+        window.chart.update();
+
+    } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+    }
+  },
+
+  getRandomInt: function (min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
   }
 
  }

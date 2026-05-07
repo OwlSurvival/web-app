@@ -31,4 +31,18 @@ public class CatsDataController {
     public List<CatRecord> getForDate(@RequestParam(name = "date") String date){
         return dataBaseService.getRecords(date);
     }
+
+    @GetMapping(path = "/chart-data")
+    public String getDataForChart(){
+        return "[\n" +
+                "    {\"label\": \"Label 1\", \"value\": 10, \"value2\": 5},\n" +
+                "    {\"label\": \"Label 1\", \"value\": 11, \"value2\": 5},\n" +
+                "    {\"label\": \"Label 1\", \"value\": 12, \"value2\": 8},\n" +
+                "    {\"label\": \"Label 1\", \"value\": 13, \"value2\": 6},\n" +
+                "    {\"label\": \"Label 1\", \"value\": 10, \"value2\": 4},\n" +
+                "    {\"label\": \"Label 1\", \"value\": 5, \"value2\": 1},\n" +
+                "    {\"label\": \"Label 1\", \"value\": 6, \"value2\": 6}\n" +
+                "  ]";
+    }
+
 }
