@@ -21,6 +21,9 @@ public class DataBaseServiceImpl implements DataBaseService {
 
     private static final String SQL_INSERT =
             "INSERT INTO temp_table1 (ID,NAME,CREATED_DATE_TIME)VALUES(?,?,?)";
+    private static final String UPDATE =
+            "UPDATE temp_table1 SET NAME = ?, CREATED_DATE_TIME = ? \n" +
+                    "WHERE ID = ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -37,6 +40,7 @@ public class DataBaseServiceImpl implements DataBaseService {
                 LocalDateTime dateTime = parse(records.get(i).getDatetime());
                 ps.setObject(3, dateTime);
             }
+
             @Override
             public int getBatchSize() {
                 return records.size();
@@ -52,21 +56,47 @@ public class DataBaseServiceImpl implements DataBaseService {
     public List<CatRecord> getRecords(String date) {
         //select * from TEMP_TABLE1 where  CAST(CREATED_DATE_TIME AS DATE)  = '2026-04-29 '
         List<CatRecord> result =
-        jdbcTemplate.query("select ID, NAME, CREATED_DATE_TIME" +
-                        " from temp_table1 WHERE CAST(CREATED_DATE_TIME AS DATE)  = ?",
-                new Object[]{date},
-                new RowMapper<CatRecord>() {
-                    @Override
-                    public CatRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        CatRecord record =new CatRecord();
-                        record.setId(rs.getObject(1, UUID.class));
-                        record.setName(rs.getString(2));
-                        LocalDateTime dt = rs.getObject(3, LocalDateTime.class);
-                        record.setDatetime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(dt));
-                        return record;
-                    }
-                });
+                jdbcTemplate.query("select ID, NAME, CREATED_DATE_TIME" +
+                                " from temp_table1 WHERE CAST(CREATED_DATE_TIME AS DATE)  = ?",
+                        new Object[]{date},
+                        new RowMapper<CatRecord>() {
+                            @Override
+                            public CatRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                CatRecord record = new CatRecord();
+                                record.setId(rs.getObject(1, UUID.class));
+                                record.setName(rs.getString(2));
+                                LocalDateTime dt = rs.getObject(3, LocalDateTime.class);
+                                record.setDatetime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(dt));
+                                return record;
+                            }
+                        });
         return result;
+    }
+
+    public CatRecord getRecordById(String id) {
+        List<CatRecord> result =
+                jdbcTemplate.query("select ID, NAME, CREATED_DATE_TIME" +
+                                " from temp_table1 WHERE ID  = ?",
+                        new Object[]{id},
+                        new RowMapper<CatRecord>() {
+                            @Override
+                            public CatRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
+                                CatRecord record = new CatRecord();
+                                record.setId(rs.getObject(1, UUID.class));
+                                record.setName(rs.getString(2));
+                                LocalDateTime dt = rs.getObject(3, LocalDateTime.class);
+                                record.setDatetime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(dt));
+                                return record;
+                            }
+                        });
+        return result.get(0);
+    }
+
+    @Override
+    @Transactional
+    public void update(CatRecord record) {
+        LocalDateTime dateTime = parse(record.getDatetime());
+        jdbcTemplate.update(UPDATE, record.getName(), dateTime, record.getId());
     }
 
     private LocalDateTime parse(String dateTimeString) {

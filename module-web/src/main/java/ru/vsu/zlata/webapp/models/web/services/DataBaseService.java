@@ -10,4 +10,8 @@ public interface DataBaseService {
 
     @Transactional(rollbackFor = Exception.class)
     List<CatRecord> getRecords(String date);
+
+    CatRecord getRecordById(String id);
+
+    void update(CatRecord record);
 }

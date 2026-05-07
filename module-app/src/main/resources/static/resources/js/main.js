@@ -67,9 +67,9 @@ window.CATS = {
                 body: localStorage.getItem("arrayKey")
               });
               if (response.ok) {
-                const data = await response.json;
+                const data = await response.json();
                 console.log("response:"+data);
-               // CATS.clearData();
+                this.clearData();
               } else {
                 throw new Error('Request failed with status ${response.status}');
               }
@@ -77,6 +77,105 @@ window.CATS = {
           console.error(error.message);
       }
 
+ },
+
+  drawTableToPossibleEditData: function (arrayData){
+      const tbody = document.getElementById('catTableBodyId');
+      tbody.innerHTML = '';
+
+      for (var i = 0; i < arrayData.length; i++) {
+       console.log(arrayData[i]);
+        var newRow = document.createElement('tr');
+       newRow.innerHTML = '<td>'+arrayData[i].name+'</td><td>'+arrayData[i].datetime+
+       '</td><td>'+arrayData[i].weight+' кг</td><td>'+arrayData[i].eatName+
+       '</td><td>'+arrayData[i].eatWeight+'г</td><td>'+arrayData[i].happiness+
+       '</td><td>'+
+        '<button onclick="CATS.removeDataBaseRecord(\''+arrayData[i].id+'\')">-</button>'+
+         '<button onclick="window.location.href=\'/edit-stored-data.html?id='+arrayData[i].id+'\'">..</button>'+
+       '</td>';
+       tbody.appendChild(newRow);
+       }
+    },
+
+   removeDataBaseRecord: async function(id){
+     console.log("need to remove id="+id);
+  try {
+         var response = await fetch('/cats/record-remove?id='+id, {
+          method: 'GET', headers: {'Content-Type': 'application/json'}
+           });
+            if (response.ok) {
+              window.location.reload();
+            } else {
+              throw new Error('Request failed with status ${response.status}');
+            }
+
+    } catch (error) {
+        console.error(error.message);
+    }
+   },
+
+   getDataFromBaseById: async function(){
+
+   let urlParams = new URLSearchParams(window.location.search);
+   let id = urlParams.get("id");
+   try {
+                 var response = await fetch('/cats/record-by-id?id='+id, {
+                   method: 'GET', headers: {'Content-Type': 'application/json'}
+                 });
+
+                 if (response.ok) {
+                   const record = await response.json();
+                   document.getElementById('catName').value=record.name;
+                   document.getElementById('timestamp').value=record.datetime;
+                   //TODO ..
+
+                 } else {
+                   throw new Error('Request failed with status ${response.status}');
+                 }
+         } catch (error) {
+             console.error(error.message);
+         }
+   },
+
+   updateRecord: async function(){
+
+   let urlParams = new URLSearchParams(window.location.search);
+   let id = urlParams.get("id");
+
+    var catName = document.getElementById('catName').value;
+    var datetime = document.getElementById("timestamp").value;
+    var weight = document.getElementById("weith_cat").value;
+    var eatName = document.getElementById("eatName").value;
+    var eatWeight = document.getElementById("weith_eat").value;
+    var happy = document.getElementById("happy_unhappy").value;
+
+    var record= {
+        "id": id,
+        "name": catName,
+        "datetime": datetime,
+        "weight": weight,
+        "eatName": eatName,
+        "eatWeight": eatWeight,
+        "happiness": happy
+      };
+
+    try {
+                 var response = await fetch('/cats/update-record', {
+                   method: 'POST',
+                   headers: {'Content-Type': 'application/json'},
+                   body: JSON.stringify(record)
+                 });
+
+                 if (response.ok) {
+                   const data = await response.json();
+                   window.history.back();
+
+                 } else {
+                   throw new Error('Request failed with status ${response.status}');
+                 }
+         } catch (error) {
+             console.error(error.message);
+         }
  },
 
  getDataFromBase: async function(){
@@ -94,7 +193,7 @@ window.CATS = {
                 const data = await response.json();
                 console.log("response:"+data);
                 CATS.clearData();
-                CATS.drowTableWithArrayData(data);
+                CATS.drawTableToPossibleEditData(data);
               } else {
                 throw new Error('Request failed with status ${response.status}');
               }

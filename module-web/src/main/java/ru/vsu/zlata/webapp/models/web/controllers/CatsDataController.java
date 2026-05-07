@@ -31,6 +31,16 @@ public class CatsDataController {
     public List<CatRecord> getForDate(@RequestParam(name = "date") String date){
         return dataBaseService.getRecords(date);
     }
+    @GetMapping(path = "/record-by-id")
+    public CatRecord getRecordeById(@RequestParam(name = "id") String id){
+        return dataBaseService.getRecordById(id);
+    }
+
+    @PostMapping(path = "/update-record")
+    public String saveRecords(@RequestBody CatRecord record){
+        dataBaseService.update(record);
+        return "{}";
+    }
 
     @GetMapping(path = "/chart-data")
     public String getDataForChart(){
