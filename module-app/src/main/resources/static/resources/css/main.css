@@ -63,3 +63,7 @@ body {
   background-color:#a7e8c9;
   width: 200px;
 }
+
+canvas {
+    background-color: #f0f0f0;
+}

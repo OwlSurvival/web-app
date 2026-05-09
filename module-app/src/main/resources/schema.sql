@@ -1,5 +1,10 @@
-CREATE TABLE  IF NOT EXISTS temp_table1 (
-    ID BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    CREATED_DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
-    NAME VARCHAR(50)
+
+CREATE TABLE IF NOT EXISTS cats_data (
+      id UUID PRIMARY KEY,
+      name VARCHAR(30),
+      date_time TIMESTAMP,
+      type_eat VARCHAR(30),
+      weight_cat DOUBLE,
+      weight_eat INT,
+      mood_cat INT
 );

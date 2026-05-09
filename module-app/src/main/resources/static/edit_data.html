@@ -24,6 +24,7 @@
         <li><a href="about_cat.html">Моя Бетта</a></li>
         <li><a href="about.html">Обо мне</a></li>
         <li><a href="edit_data.html">Внесите данные кошки</a></li>
+        <li><a href="load_data.html">Просмотр данных</a></li>
 
       </ul>
     </div>
@@ -33,7 +34,7 @@
       <h2>Дневник вашей кошки</h2>
     </center>
       <form action="" method="post" >
-        <label for="user_name">Выберите имя</label>
+        <label>Выберите имя</label>
         <select name="Кошка:" id="catName">
          <option value="Муся">Муся</option>
          <option value="Бетти">Бэтти</option>
@@ -73,6 +74,7 @@
 
     <div class="base-body-table">
       <input type="reset" value ="Очистить" onclick="CATS.clearData()" class="clear-button"><!-- очищает форму  -->
+      <input type="reset" value ="Сохранить&Очистить" onclick="CATS.storeToDataBase()" class="clear-button"><!-- очищает форму  -->
       <table border="2" width="1000px"> <!-- border="1"-обводка 1 пискель -->
         <!-- шапка  -->
         <thead>

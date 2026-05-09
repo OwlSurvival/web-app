@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="Злата">
+    <meta name="description" content="Сайт о моей кошке Бетти">
+    <meta name="keywords" content="кошка,уход,описание,Бетти">
+    <link rel="stylesheet" href="Resources/css/main.css">
+    <script type="text/javascript" src="./resources/js/main.js" >
+
+    </script>
+  </head>
+
+<body class="page-with-bg" onload="CATS.getDataFromBaseById()">
+
+  <div class="img-cat">
+    <img src="Resources/img/head.jpg" width="100%" height="auto" alt="бетта">
+  </div>
+
+  <div class="base-body-cont">
+
+    <div class="left-aside">
+      <ul >
+        <li><a href="index.html">Главная страница</a></li>
+        <li><a href="about_cat.html">Моя Бетта</a></li>
+        <li><a href="about.html">Обо мне</a></li>
+        <li><a href="edit_data.html">Внесите данные кошки</a></li>
+
+      </ul>
+    </div>
+  <div class="base-body">
+
+            <div class="base-body-form">
+              <center>
+              <h2>Редактирование записи из базы данных</h2>
+            </center>
+              <form action="" method="post" >
+                <label>Кошка</label>
+                <select name="Кошка:" id="catName">
+                 <option value="Муся">Муся</option>
+                 <option value="Бетти">Бэтти</option>
+                 <option value="Мурзик">Мурзик</option>
+               </select><br>
+
+                <label for="weith_cat">Дата и время</label>
+                <input type="datetime-local" id="timestamp" ><br>
+
+                <label for="weith_cat">Вес кошки(кг)</label>
+                <input type="number" name="weith_cat" id="weith_cat"><br>
+
+                <label for="eatName">Корм</label>
+                <select name="eatName:" id="eatName">
+                  <option value="Felix">Felix</option>
+                  <option value="Perfect">Perfect</option>
+                  <option value="Kitekat">Kitekat</option>
+                </select><br>
+
+               <label for="weith_eat">Вес корма(г)</label>
+               <input type="number" name="weith_eat" id="weith_eat"><br>
+
+               <label for="happy_unhappy">Настроение кошки</label>
+               <select name="happy_unhappy" id="happy_unhappy">
+                 <option value="1">1</option>
+                 <option value="2">2</option>
+                 <option value="3">3</option>
+                 <option value="4">4</option>
+                 <option value="5">5</option>
+               </select><br>
+
+               <input type="button" value = "Сохранить изменения" onClick="CATS.updateRecord()" class="button-add">
+
+            </form>
+          </div>
+
+  </div>
+
+  </div>
+
+  </body>
+</html>
