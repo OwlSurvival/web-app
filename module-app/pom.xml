@@ -92,7 +92,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.version}</version>
                 <configuration>
-                    <mainClass>ru.vsu.zlata.webapp.models.StartApp</mainClass>
+                    <mainClass>ru.vsu.zlata.webapp.StartApp</mainClass>
                 </configuration>
                 <executions>
                     <execution>

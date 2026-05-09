@@ -7,6 +7,7 @@ import ru.vsu.zlata.webapp.models.CatRecord;
 import ru.vsu.zlata.webapp.models.web.services.DataBaseService;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -39,6 +40,12 @@ public class CatsDataController {
     @PostMapping(path = "/update-record")
     public String saveRecords(@RequestBody CatRecord record){
         dataBaseService.update(record);
+        return "{}";
+    }
+
+    @DeleteMapping(path = "/record-remove")
+    public String deleteRecord(@RequestParam(name= "id") UUID id){
+        dataBaseService.deleteRecord(id);
         return "{}";
     }
 

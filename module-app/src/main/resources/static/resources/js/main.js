@@ -80,31 +80,33 @@ window.CATS = {
  },
 
   drawTableToPossibleEditData: function (arrayData){
-      const tbody = document.getElementById('catTableBodyId');
+
+      const tbody = document.getElementById("catTableBodyId");
       tbody.innerHTML = '';
 
       for (var i = 0; i < arrayData.length; i++) {
-       console.log(arrayData[i]);
-        var newRow = document.createElement('tr');
-       newRow.innerHTML = '<td>'+arrayData[i].name+'</td><td>'+arrayData[i].datetime+
-       '</td><td>'+arrayData[i].weight+' кг</td><td>'+arrayData[i].eatName+
-       '</td><td>'+arrayData[i].eatWeight+'г</td><td>'+arrayData[i].happiness+
-       '</td><td>'+
-        '<button onclick="CATS.removeDataBaseRecord(\''+arrayData[i].id+'\')">-</button>'+
-         '<button onclick="window.location.href=\'/edit-stored-data.html?id='+arrayData[i].id+'\'">..</button>'+
-       '</td>';
+       //console.log(arrayData[i]);
+        var newRow = document.createElement("tr");
+        var newUrl = "/edit-stored-data.html?id="+arrayData[i].id;
+       newRow.innerHTML = "<td>"+arrayData[i].name+"</td><td>"+arrayData[i].datetime+
+       "</td><td>"+arrayData[i].weight+" кг</td><td>"+arrayData[i].eatName+
+       "</td><td>"+arrayData[i].eatWeight+"г</td><td>"+arrayData[i].happiness+
+       "</td><td>"+
+       "<button onclick=\"CATS.removeDataBaseRecord('"+arrayData[i].id+"')\">-</button>"+
+       "<button onclick=\"window.open('"+newUrl+"','newWindow','width=800,height=600')\">..</button>"+
+       "</td>";
        tbody.appendChild(newRow);
        }
     },
 
    removeDataBaseRecord: async function(id){
-     console.log("need to remove id="+id);
+    // console.log("need to remove id="+id);
   try {
          var response = await fetch('/cats/record-remove?id='+id, {
-          method: 'GET', headers: {'Content-Type': 'application/json'}
+          method: 'DELETE', headers: {'Content-Type': 'application/json'}
            });
             if (response.ok) {
-              window.location.reload();
+              CATS.getDataFromBase();
             } else {
               throw new Error('Request failed with status ${response.status}');
             }
@@ -127,7 +129,11 @@ window.CATS = {
                    const record = await response.json();
                    document.getElementById('catName').value=record.name;
                    document.getElementById('timestamp').value=record.datetime;
-                   //TODO ..
+                   document.getElementById('weith_cat').value=record.weight;
+                   document.getElementById('eatName').value=record.eatName;
+                   document.getElementById('weith_eat').value=record.eatWeight;
+                   document.getElementById('happy_unhappy').value=record.happiness;
+
 
                  } else {
                    throw new Error('Request failed with status ${response.status}');
@@ -168,8 +174,8 @@ window.CATS = {
 
                  if (response.ok) {
                    const data = await response.json();
-                   window.history.back();
-
+                   window.opener.CATS.getDataFromBase();
+                   window.close();
                  } else {
                    throw new Error('Request failed with status ${response.status}');
                  }

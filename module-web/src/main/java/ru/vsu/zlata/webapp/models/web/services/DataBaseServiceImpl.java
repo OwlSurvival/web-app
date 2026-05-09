@@ -19,10 +19,14 @@ import java.util.UUID;
 @Service
 public class DataBaseServiceImpl implements DataBaseService {
 
+    private static final String TABLE_NAME = "cats_data";
     private static final String SQL_INSERT =
-            "INSERT INTO temp_table1 (ID,NAME,CREATED_DATE_TIME)VALUES(?,?,?)";
+            "INSERT INTO "+ TABLE_NAME +" (id,name,date_time,type_eat,weight_cat,weight_eat,mood_cat)" +
+                    "VALUES(?,?,?,?,?,?,?)";
+    private static final String SQL_GET_DATA = "select id,name,date_time ,type_eat,weight_cat,weight_eat,mood_cat" +
+            " from cats_data WHERE CAST(date_time AS DATE)  = ?";
     private static final String UPDATE =
-            "UPDATE temp_table1 SET NAME = ?, CREATED_DATE_TIME = ? \n" +
+            "UPDATE cats_data SET NAME = ?, date_time = ?,type_eat = ?,weight_cat = ?,weight_eat = ?,mood_cat = ? \n" +
                     "WHERE ID = ?";
 
     @Autowired
@@ -39,6 +43,10 @@ public class DataBaseServiceImpl implements DataBaseService {
                 ps.setString(2, records.get(i).getName());
                 LocalDateTime dateTime = parse(records.get(i).getDatetime());
                 ps.setObject(3, dateTime);
+                ps.setString(4,records.get(i).getEatName());
+                ps.setDouble(5,records.get(i).getWeight());
+                ps.setInt(6,records.get(i).getEatWeight());
+                ps.setInt(7,records.get(i).getHappiness());
             }
 
             @Override
@@ -56,8 +64,7 @@ public class DataBaseServiceImpl implements DataBaseService {
     public List<CatRecord> getRecords(String date) {
         //select * from TEMP_TABLE1 where  CAST(CREATED_DATE_TIME AS DATE)  = '2026-04-29 '
         List<CatRecord> result =
-                jdbcTemplate.query("select ID, NAME, CREATED_DATE_TIME" +
-                                " from temp_table1 WHERE CAST(CREATED_DATE_TIME AS DATE)  = ?",
+                jdbcTemplate.query(SQL_GET_DATA,
                         new Object[]{date},
                         new RowMapper<CatRecord>() {
                             @Override
@@ -67,6 +74,11 @@ public class DataBaseServiceImpl implements DataBaseService {
                                 record.setName(rs.getString(2));
                                 LocalDateTime dt = rs.getObject(3, LocalDateTime.class);
                                 record.setDatetime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(dt));
+                                record.setEatName(rs.getString(4));
+                                record.setWeight(rs.getDouble(5));
+                                record.setEatWeight(rs.getInt(6));
+                                record.setHappiness(rs.getInt(7));
+
                                 return record;
                             }
                         });
@@ -75,8 +87,8 @@ public class DataBaseServiceImpl implements DataBaseService {
 
     public CatRecord getRecordById(String id) {
         List<CatRecord> result =
-                jdbcTemplate.query("select ID, NAME, CREATED_DATE_TIME" +
-                                " from temp_table1 WHERE ID  = ?",
+                jdbcTemplate.query("select id, name, date_time, type_eat,weight_cat,weight_eat,mood_cat" +
+                                " from cats_data WHERE ID  = ?",
                         new Object[]{id},
                         new RowMapper<CatRecord>() {
                             @Override
@@ -86,6 +98,10 @@ public class DataBaseServiceImpl implements DataBaseService {
                                 record.setName(rs.getString(2));
                                 LocalDateTime dt = rs.getObject(3, LocalDateTime.class);
                                 record.setDatetime(DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(dt));
+                                record.setEatName(rs.getString(4));
+                                record.setWeight(rs.getDouble(5));
+                                record.setEatWeight(rs.getInt(6));
+                                record.setHappiness(rs.getInt(7));
                                 return record;
                             }
                         });
@@ -96,7 +112,13 @@ public class DataBaseServiceImpl implements DataBaseService {
     @Transactional
     public void update(CatRecord record) {
         LocalDateTime dateTime = parse(record.getDatetime());
-        jdbcTemplate.update(UPDATE, record.getName(), dateTime, record.getId());
+        jdbcTemplate.update(UPDATE, record.getName(), dateTime, record.getEatName(),
+                record.getWeight(),record.getEatWeight(),record.getHappiness(), record.getId());
+    }
+
+    @Override
+    public void deleteRecord(UUID id) {
+        jdbcTemplate.update("DELETE FROM "+ TABLE_NAME + " WHERE id = ?", id);
     }
 
     private LocalDateTime parse(String dateTimeString) {

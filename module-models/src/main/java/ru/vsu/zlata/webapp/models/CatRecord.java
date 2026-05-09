@@ -11,6 +11,6 @@ public class CatRecord {
     private String datetime;
     private double weight;
     private String eatName;
-    private double eatWeight;
+    private int eatWeight;
     private int happiness;
 }
