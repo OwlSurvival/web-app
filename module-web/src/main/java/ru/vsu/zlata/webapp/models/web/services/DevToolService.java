@@ -19,11 +19,9 @@ import java.util.UUID;
 @Log4j2
 public class DevToolService {
 
-
     @Autowired
     private DataBaseService dataBaseService;
     private boolean debugMode;
-
 
     public static void main(String[] args) {
         DevToolService service = new DevToolService();
@@ -34,7 +32,6 @@ public class DevToolService {
     private void setDebugMode(boolean debugMode) {
       this.debugMode = debugMode;
     }
-
 
     @Transactional
     public void fillByRandomData() {
@@ -59,7 +56,7 @@ public class DevToolService {
             for (int dayEatTimeIndex = 0; dayEatTimeIndex < dayEatTime.length; dayEatTimeIndex++) {
                 eatTypeIndex = random.nextInt(0, 3);
                 for (int catIndex = 0; catIndex < cats.length; catIndex++) {
-                    //Perfect is better than others for the cat mood
+                    //Perfect is better than others for the cat's mood
                     if (prevEatTypeIndex == 1) {
                         mood = random.nextInt(4, 6);
                         if (catIndex == 2) {//cat is too small it can't eat to mach
@@ -69,7 +66,7 @@ public class DevToolService {
                         }
                     } else {
                         mood = random.nextInt(1, 6);
-                        if (catIndex == 2) {//cat is too small it can't eat to mach
+                        if (catIndex == 2) {//cat is too small, it can't eat to mach
                             eatWeight = random.nextInt(10, 41);
                         } else {
                             eatWeight = random.nextInt(0, 51);
