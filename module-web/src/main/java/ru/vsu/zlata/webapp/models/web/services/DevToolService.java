@@ -32,17 +32,18 @@ public class DevToolService {
     @Transactional
     public void fillByRandomData() {
 
-        String cats[] = {"Муся", "Бетти", "Мурзик"};
-        double catsWeight[] = {2.500, 3.000, 1.000};
-        String eatType[] = {"Felix", "Perfect", "Kitekat"};
-        LocalDate currentDate = LocalDate.now().minusDays(365);
+        String[] cats = {"Муся", "Бетти", "Мурзик"};
+        double[] catsWeight = {2.500, 3.000, 1.000};
+        String[] eatType = {"Felix", "Perfect", "Kitekat"};
+        LocalDate today = LocalDate.now();
+        LocalDate currentDate = today.minusDays(365);
         Random random = new Random();
         int eatWeight, mood, eatTypeIndex, prevEatTypeIndex = 0;
         CatRecord rec = null;
         LocalDateTime[] dayEatTime = new LocalDateTime[3];
         List<CatRecord> listOfRecords = new ArrayList<>();
 
-        for (int dayIndex = 0; dayIndex < 365; dayIndex++) {
+        while (currentDate.isBefore(today)) {
 
             dayEatTime[0] = currentDate.atTime(8, 0);
             dayEatTime[1] = currentDate.atTime(12, 0);
@@ -71,6 +72,7 @@ public class DevToolService {
                             eatWeight = random.nextInt(0, 200);
                         }
                     }
+
                     catsWeight[catIndex] += random.nextDouble(-0.001, 0.002);
 
                     rec = new CatRecord();
@@ -86,6 +88,7 @@ public class DevToolService {
                 }
                 prevEatTypeIndex = eatTypeIndex;
             }
+
             dataBaseService.store(listOfRecords);
             listOfRecords.clear();
             currentDate = currentDate.plusDays(1);
