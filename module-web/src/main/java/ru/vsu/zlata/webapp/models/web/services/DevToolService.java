@@ -1,5 +1,7 @@
 package ru.vsu.zlata.webapp.models.web.services;
 
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,7 +9,6 @@ import ru.vsu.zlata.webapp.models.CatRecord;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,18 +17,25 @@ import java.util.Random;
 import java.util.UUID;
 
 @Service
+@Log4j2
 public class DevToolService {
+
 
     @Autowired
     private DataBaseService dataBaseService;
+    private boolean debugMode;
 
-    /*
+
     public static void main(String[] args) {
         DevToolService service = new DevToolService();
+        service.setDebugMode(true);
         service.fillByRandomData();
     }
 
-     */
+    private void setDebugMode(boolean debugMode) {
+      this.debugMode = debugMode;
+    }
+
 
     @Transactional
     public void fillByRandomData() {
@@ -50,31 +58,26 @@ public class DevToolService {
             dayEatTime[2] = currentDate.atTime(19, 0);
 
             for (int dayEatTimeIndex = 0; dayEatTimeIndex < dayEatTime.length; dayEatTimeIndex++) {
-
-                eatTypeIndex = random.nextInt(0, 2);
-
+                eatTypeIndex = random.nextInt(0, 3);
                 for (int catIndex = 0; catIndex < cats.length; catIndex++) {
-
-
                     //Perfect is better than others for the cat mood
                     if (prevEatTypeIndex == 1) {
-                        mood = random.nextInt(3, 5);
+                        mood = random.nextInt(4, 6);
                         if (catIndex == 2) {//cat is too small it can't eat to mach
-                            eatWeight = random.nextInt(25, 70);
+                            eatWeight = random.nextInt(20, 51);
                         } else {
-                            eatWeight = random.nextInt(100, 200);
+                            eatWeight = random.nextInt(50, 81);
                         }
                     } else {
-                        mood = random.nextInt(2, 5);
+                        mood = random.nextInt(1, 6);
                         if (catIndex == 2) {//cat is too small it can't eat to mach
-                            eatWeight = random.nextInt(10, 50);
+                            eatWeight = random.nextInt(10, 41);
                         } else {
-                            eatWeight = random.nextInt(0, 200);
+                            eatWeight = random.nextInt(0, 51);
                         }
                     }
 
                     catsWeight[catIndex] += random.nextDouble(-0.001, 0.002);
-
                     rec = new CatRecord();
                     rec.setId(UUID.randomUUID());
                     rec.setName(cats[catIndex]);
@@ -83,13 +86,17 @@ public class DevToolService {
                     rec.setWeight(roundDouble3Scale(catsWeight[catIndex]));
                     rec.setEatWeight(eatWeight);
                     rec.setHappiness(mood);
+                    if(debugMode) {
+                      System.out.println("rec: " + rec);
+                    }
 
                     listOfRecords.add(rec);
                 }
                 prevEatTypeIndex = eatTypeIndex;
             }
 
-            dataBaseService.store(listOfRecords);
+            if(!debugMode)
+             dataBaseService.store(listOfRecords);
             listOfRecords.clear();
             currentDate = currentDate.plusDays(1);
         }
