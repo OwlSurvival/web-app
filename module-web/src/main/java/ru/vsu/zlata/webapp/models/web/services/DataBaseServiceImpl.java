@@ -19,8 +19,8 @@ import java.util.UUID;
 @Service
 public class DataBaseServiceImpl implements DataBaseService {
 
-    private static final String TABLE_NAME = "cats_data";
-    private static final String SQL_INSERT =
+    public static final String TABLE_NAME = "cats_data";
+    public static final String SQL_INSERT =
             "INSERT INTO "+ TABLE_NAME +" (id,name,date_time,type_eat,weight_cat,weight_eat,mood_cat)" +
                     "VALUES(?,?,?,?,?,?,?)";
     private static final String SQL_GET_DATA = "select id,name,date_time ,type_eat,weight_cat,weight_eat,mood_cat" +
