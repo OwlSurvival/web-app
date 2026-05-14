@@ -7,14 +7,14 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.vsu.zlata.webapp.models.CatRecord;
+import ru.vsu.zlata.webapp.models.ChartData;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class DataBaseServiceImpl implements DataBaseService {
@@ -119,6 +119,62 @@ public class DataBaseServiceImpl implements DataBaseService {
     @Override
     public void deleteRecord(UUID id) {
         jdbcTemplate.update("DELETE FROM "+ TABLE_NAME + " WHERE id = ?", id);
+    }
+
+    private static final String SELECT_EATEN=
+            "SELECT TO_CHAR(DATE_TIME, 'YYYY-MM-DD') AS YMD,  \n" +
+                    "SUM(WEIGHT_EAT) FILTER (WHERE NAME = 'Бетти') AS value_betty,\n" +
+                    "SUM(WEIGHT_EAT) FILTER (WHERE NAME = 'Мурзик') AS value_murzik,\n" +
+                    "SUM(WEIGHT_EAT) FILTER (WHERE NAME = 'Муся') AS value_musya\n" +
+                    "FROM CATS_DATA\n" +
+                    "WHERE TO_CHAR(DATE_TIME, 'YYYY-MM') = ?\n" +
+                    "GROUP BY YMD ORDER BY YMD";
+
+    @Override
+    public Collection<ChartData> getEatenByNameYdm(String yearMonth){
+
+       return jdbcTemplate.query(SELECT_EATEN,
+                new Object[]{yearMonth},
+                new RowMapper<ChartData>() {
+                    @Override
+                    public ChartData mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        ChartData data = new ChartData();
+                        data.setLabel(rs.getString(1));
+                        Integer [] values = new Integer[3];
+                        values[0]=rs.getInt(2);
+                        values[1]=rs.getInt(3);
+                        values[2]=rs.getInt(4);
+                        data.setValues(values);
+                        return data;
+                    }
+                });
+    }
+
+    private static final String SELECT_MOOD=
+            "SELECT TO_CHAR(DATE_TIME, 'YYYY-MM-DD') AS YMD,  \n" +
+                    "SUM(mood_cat) FILTER (WHERE NAME = 'Бетти') AS value_betty,\n" +
+                    "SUM(mood_cat) FILTER (WHERE NAME = 'Мурзик') AS value_murzik,\n" +
+                    "SUM(mood_cat) FILTER (WHERE NAME = 'Муся') AS value_musya\n" +
+                    "FROM CATS_DATA\n" +
+                    "WHERE TO_CHAR(DATE_TIME, 'YYYY-MM') = ?\n" +
+                    "GROUP BY YMD ORDER BY YMD";
+    @Override
+    public Collection<ChartData> getMoodNameYdm(String yearMonth) {
+        return jdbcTemplate.query(SELECT_MOOD,
+                new Object[]{yearMonth},
+                new RowMapper<ChartData>() {
+                    @Override
+                    public ChartData mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        ChartData data = new ChartData();
+                        data.setLabel(rs.getString(1));
+                        Integer [] values = new Integer[3];
+                        values[0]=rs.getInt(2);
+                        values[1]=rs.getInt(3);
+                        values[2]=rs.getInt(4);
+                        data.setValues(values);
+                        return data;
+                    }
+                });
     }
 
     private LocalDateTime parse(String dateTimeString) {
