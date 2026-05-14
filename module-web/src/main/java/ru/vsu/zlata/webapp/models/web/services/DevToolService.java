@@ -35,13 +35,12 @@ public class DevToolService {
         String cats[] = {"Муся", "Бетти", "Мурзик"};
         double catsWeight[] = {2.500, 3.000, 1.000};
         String eatType[] = {"Felix", "Perfect", "Kitekat"};
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = LocalDate.now().minusDays(365);
         Random random = new Random();
         int eatWeight, mood, eatTypeIndex, prevEatTypeIndex = 0;
         CatRecord rec = null;
         LocalDateTime[] dayEatTime = new LocalDateTime[3];
         List<CatRecord> listOfRecords = new ArrayList<>();
-        DecimalFormat catWeightInKgFormat = new DecimalFormat("#.###");
 
         for (int dayIndex = 0; dayIndex < 365; dayIndex++) {
 
@@ -65,14 +64,14 @@ public class DevToolService {
                             eatWeight = random.nextInt(100, 200);
                         }
                     } else {
-                        mood = random.nextInt(1, 5);
+                        mood = random.nextInt(2, 5);
                         if (catIndex == 2) {//cat is too small it can't eat to mach
                             eatWeight = random.nextInt(10, 50);
                         } else {
                             eatWeight = random.nextInt(0, 200);
                         }
                     }
-                    catsWeight[catIndex] += random.nextDouble(-0.01, 0.05);
+                    catsWeight[catIndex] += random.nextDouble(-0.001, 0.002);
 
                     rec = new CatRecord();
                     rec.setId(UUID.randomUUID());
@@ -84,14 +83,12 @@ public class DevToolService {
                     rec.setHappiness(mood);
 
                     listOfRecords.add(rec);
-
-                    System.out.println(eatType[eatTypeIndex]);
                 }
                 prevEatTypeIndex = eatTypeIndex;
             }
             dataBaseService.store(listOfRecords);
             listOfRecords.clear();
-            currentDate = currentDate.minusDays(1);
+            currentDate = currentDate.plusDays(1);
         }
     }
 
