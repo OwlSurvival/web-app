@@ -21,14 +21,13 @@ public class DevToolService {
     @Autowired
     private DataBaseService dataBaseService;
 
+    /*
     public static void main(String[] args) {
-        Double d = 2.543000001;
-        DecimalFormat catWeightInKgFormat = new DecimalFormat("#.###");
-        Double dRes = Double.parseDouble(catWeightInKgFormat.format(d));
-
         DevToolService service = new DevToolService();
         service.fillByRandomData();
     }
+
+     */
 
     @Transactional
     public void fillByRandomData() {
