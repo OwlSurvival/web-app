@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.vsu.zlata.webapp.models.CatRecord;
+import ru.vsu.zlata.webapp.models.ChartData;
 import ru.vsu.zlata.webapp.models.web.services.DataBaseService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,17 +51,13 @@ public class CatsDataController {
         return "{}";
     }
 
-    @GetMapping(path = "/chart-data")
-    public String getDataForChart(){
-        return "[\n" +
-                "    {\"label\": \"Label 1\", \"value\": 10, \"value2\": 5},\n" +
-                "    {\"label\": \"Label 1\", \"value\": 11, \"value2\": 5},\n" +
-                "    {\"label\": \"Label 1\", \"value\": 12, \"value2\": 8},\n" +
-                "    {\"label\": \"Label 1\", \"value\": 13, \"value2\": 6},\n" +
-                "    {\"label\": \"Label 1\", \"value\": 10, \"value2\": 4},\n" +
-                "    {\"label\": \"Label 1\", \"value\": 5, \"value2\": 1},\n" +
-                "    {\"label\": \"Label 1\", \"value\": 6, \"value2\": 6}\n" +
-                "  ]";
+    @GetMapping(path = "/chart-data/eaten")
+    public Collection<ChartData>  getDataForChart(@RequestParam(name= "year-month") String yearMonth){
+        return dataBaseService.getEatenByNameYdm(yearMonth);
     }
 
+    @GetMapping(path = "/chart-data/mood")
+    public Collection<ChartData>  getMoodForChart(@RequestParam(name= "year-month") String yearMonth){
+        return dataBaseService.getMoodNameYdm(yearMonth);
+    }
 }

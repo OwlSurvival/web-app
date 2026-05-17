@@ -219,54 +219,97 @@ window.CATS = {
                  labels: [],
                  datasets: [
                  {
-                     label: 'Динамика показателей1',
+                     label: 'Динамика показателей Бетти',
                      data: [],
                      borderColor: 'rgb(75, 192, 192)', // Цвет линии 1
                      backgroundColor: 'rgba(75, 192, 192, 0.2)', // Цвет заливки
                      tension: 0.1 // Сглаживание линии
                  }, {
-                     label: 'Динамика показателей2',
+                     label: 'Динамика показателей Мурзика',
                      data: [],
                      borderColor: 'rgb(255, 99, 132)', // Цвет линии 2
                      backgroundColor: 'rgba(255, 99, 132, 0.2)',
                      tension: 0.1
-                   }
+                 }, {
+                     label: 'Динамика показателей Муси',
+                     data: [],
+                     borderColor: 'blue', // Цвет линии 3
+                     backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                     tension: 0.1
+                 }
                  ]
              }
          });
+
+         const ctx2 = document.getElementById('myChart2').getContext('2d');
+                  window.chart2 = new Chart(ctx2, {
+                      type: 'line',
+                      data: {
+                          labels: [],
+                          datasets: [
+                          {
+                              label: 'Динамика показателей Бетти',
+                              data: [],
+                              borderColor: 'rgb(75, 192, 192)', // Цвет линии 1
+                              backgroundColor: 'rgba(75, 192, 192, 0.2)', // Цвет заливки
+                              tension: 0.1 // Сглаживание линии
+                          }, {
+                              label: 'Динамика показателей Мурзика',
+                              data: [],
+                              borderColor: 'rgb(255, 99, 132)', // Цвет линии 2
+                              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                              tension: 0.1
+                          }, {
+                              label: 'Динамика показателей Муси',
+                              data: [],
+                              borderColor: 'blue', // Цвет линии 3
+                              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                              tension: 0.1
+                          }
+                          ]
+                      }
+                  });
   },
 
   getDataAndDrawChart: async function(){
 
     CATS.initChart();
-    const selectedDate = document.getElementById('timestamp').value;
-    if (!selectedDate)
-      return alert("Выберите дату");
+    const selectedMonth = document.getElementById('Month').value;
+    if (!selectedMonth)
+      return alert("Выберите месяц");
+      const selectedYear = document.getElementById('Year').value;
+    if (!selectedYear)
+      return alert("Выберите год");
 
     try {
 
-       const response = await fetch('/cats/chart-data');
+       const response = await fetch('/cats/chart-data/eaten?year-month='+selectedYear+'-'+selectedMonth);
         // Ожидаем массив объектов [{label: '...', value: 10}, ...]
         let result = await response.json();
-/*
-        result=[
-           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
-           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
-           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
-           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
-           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
-           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
-           {label: 'Label 1', value: CATS.getRandomInt(1,100), value2: CATS.getRandomInt(1,100)},
-        ];
-        */
+
         window.chart.data.labels = result.map(item => item.label);
-        window.chart.data.datasets[0].data = result.map(item => item.value);
-        window.chart.data.datasets[1].data = result.map(item => item.value2);
+        window.chart.data.datasets[0].data = result.map(item => item.values[0]);
+        window.chart.data.datasets[1].data = result.map(item => item.values[1]);
+        window.chart.data.datasets[2].data = result.map(item => item.values[2]);
         window.chart.update();
 
     } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
     }
+    //---------------------
+    try {
+           const response2 = await fetch('/cats/chart-data/mood?year-month='+selectedYear+'-'+selectedMonth);
+           let result = await response2.json();
+            window.chart2.data.labels = result.map(item => item.label);
+            window.chart2.data.datasets[0].data = result.map(item => item.values[0]);
+            window.chart2.data.datasets[1].data = result.map(item => item.values[1]);
+            window.chart2.data.datasets[2].data = result.map(item => item.values[2]);
+            window.chart2.update();
+
+        } catch (error) {
+            console.error("Ошибка при загрузке данных:", error);
+        }
+
   },
 
   getRandomInt: function (min, max) {
